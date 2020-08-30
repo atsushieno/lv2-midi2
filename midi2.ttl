@@ -1,0 +1,695 @@
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix midi2: <https://atsushieno.dev/ns/lv2/midi2> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://atsushieno.dev/ns/lv2/midi2>
+	a owl:Ontology ;
+	rdfs:label "Unofficial MIDI 2.0 UMP" ;
+	rdfs:comment "Unofficial MIDI 2.0 UMP packet support." ;
+	rdfs:seeAlso <lv2-midi2.h> ,
+		<midi2.meta.ttl> .
+
+midi2:HexByte
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:hexBinary ;
+	owl:withRestrictions (
+		[
+			xsd:maxInclusive "FF"
+		]
+	) ;
+	rdfs:label "Hex Byte" ;
+	rdfs:comment "A hexadecimal byte, which has a value <= FF." .
+
+midi2:Chunk
+	a rdfs:Class ;
+	rdfs:label "Chunk" ;
+	rdfs:comment "A sequence of contiguous bytes in a MIDI message." .
+
+midi2:UMPMessage
+	a rdfs:Class ,
+		rdfs:Datatype ;
+	rdfs:subClassOf ev:Event ,
+		atom:Atom ;
+	owl:onDatatype xsd:hexBinary ;
+	rdfs:label "MIDI 2.0 UMP Message" ;
+	rdfs:comment "A single raw MIDI message." .
+
+midi2:SystemMessage
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "System Message" ;
+	rdfs:comment "system message." ;
+	midi2:messageTypeMask "10"^^xsd:hexBinary .
+
+midi2:SystemCommon
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemMessage ;
+	rdfs:label "System Common" ;
+	rdfs:comment "system common message." .
+
+midi2:SystemRealtime
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemMessage ;
+	rdfs:label "System Realtime" ;
+	rdfs:comment "MIDI system realtime message." .
+
+midi2:Midi1ChannelMessage
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "MIDI1 Channel Voice Message" ;
+	rdfs:comment "MIDI 1.0 channel voice message." ;
+	midi2:messageTypeMask "20"^^xsd:hexBinary .
+
+midi2:Sysex7Message
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "System Exclusive 7bits" ;
+	rdfs:comment "system exclusive message in 7 bits." ;
+	midi2:messageTypeMask "30"^^xsd:hexBinary .
+
+midi2:Midi2ChannelMessage
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "MIDI2 Channel Voice Message" ;
+	rdfs:comment "MIDI 2.0 channel voice message." ;
+	midi2:messageTypeMask "40"^^xsd:hexBinary .
+
+midi2:Sysex8Message
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "System Exclusive 8bits" ;
+	rdfs:comment "system exclusive message in 8 bits." ;
+	midi2:messageTypeMask "50"^^xsd:hexBinary .
+
+midi2:MixedDataSet
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:label "System Exclusive 8bits" ;
+	rdfs:comment "system exclusive message in 8 bits." ;
+	midi2:messageTypeMask "50"^^xsd:hexBinary .
+
+
+midi2:TimeCode
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemCommon ;
+	rdfs:label "Time code" ;
+	rdfs:comment "MIDI time code message." ;
+	midi2:status "F1"^^xsd:hexBinary .
+
+midi2:SongPosition
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemCommon ;
+	rdfs:label "Song position" ;
+	rdfs:comment "Song position pointer message." ;
+	midi2:status "F2"^^xsd:hexBinary .
+
+midi2:SongSelect
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemCommon ;
+	rdfs:label "Song select" ;
+	rdfs:comment "Song select message." ;
+	midi2:status "F3"^^xsd:hexBinary .
+
+midi2:TuneRequest
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemCommon ;
+	rdfs:label "Tune request" ;
+	rdfs:comment "Tune request message." ;
+	midi2:status "F6"^^xsd:hexBinary .
+
+midi2:TimingClock
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Timing clock" ;
+	rdfs:comment "Timing clock message." ;
+	midi2:status "F8"^^xsd:hexBinary .
+
+midi2:Start
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Start" ;
+	rdfs:comment "Start message." ;
+	midi2:status "FA"^^xsd:hexBinary .
+
+midi2:Continue
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Continue" ;
+	rdfs:comment "Continue message." ;
+	midi2:status "FB"^^xsd:hexBinary .
+
+midi2:Stop
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Stop" ;
+	rdfs:comment "Stop message." ;
+	midi2:status "FC"^^xsd:hexBinary .
+
+midi2:ActiveSensing
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Active Sensing" ;
+	rdfs:comment "MIDI active sensing message." ;
+	midi2:status "FE"^^xsd:hexBinary .
+
+midi2:Reset
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:SystemRealtime ;
+	rdfs:label "Reset" ;
+	rdfs:comment "Reset message." ;
+	midi2:status "FF"^^xsd:hexBinary .
+
+
+midi2:NoteOff1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 note off" ;
+	rdfs:comment "MIDI1 note off message." ;
+	midi2:statusMask "80"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:velocity7
+	] .
+
+midi2:NoteOn1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 note on" ;
+	rdfs:comment "MIDI1 note on message." ;
+	midi2:statusMask "90"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:velocity7
+	] .
+
+midi2:PolyphonicPressure1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 polyphonic pressure" ;
+	rdfs:comment "MIDI1 polyphonic pressure message." ;
+	midi2:statusMask "A0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:data8
+	] .
+
+midi2:ControlChange1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 control change" ;
+	rdfs:comment "MIDI1 control change message." ;
+	midi2:statusMask "B0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:index
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:data8
+	] .
+
+midi2:ProgramChange1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 program change" ;
+	rdfs:comment "MIDI1 program change message." ;
+	midi2:statusMask "C0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:program
+	] .
+
+midi2:ChannelPressure1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 channel pressure" ;
+	rdfs:comment "MIDI1 channel pressure message." ;
+	midi2:statusMask "D0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:data8
+	] .
+
+midi2:PitchBend1
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi1ChannelMessage ;
+	rdfs:label "MIDI1 pitch bend" ;
+	rdfs:comment "MIDI1 pitch bend message." ;
+	midi2:statusMask "E0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0,1 ;
+		midi2:property midi2:data16
+	] .
+
+
+midi2:NoteOff2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 note off" ;
+	rdfs:comment "MIDI2 note off message." ;
+	midi2:statusMask "80"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:attributeType
+	] , [
+		midi2:byteNumber 2,3 ;
+		midi2:property midi2:velocity16
+	] , [
+		midi2:byteNumber 4,5 ;
+		midi2:property midi2:attributeData
+	] .
+
+midi2:NoteOn2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 note on" ;
+	rdfs:comment "MIDI2 note on message." ;
+	midi2:statusMask "90"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:attributeType
+	] , [
+		midi2:byteNumber 2,3 ;
+		midi2:property midi2:velocity16
+	] , [
+		midi2:byteNumber 4,5 ;
+		midi2:property midi2:attributeData
+	] .
+
+midi2:PolyphonicPressure2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 polyphonic pressure" ;
+	rdfs:comment "MIDI2 polyphonic pressure message." ;
+	midi2:statusMask "A0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:ControlChange2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 control change" ;
+	rdfs:comment "MIDI2 control change message." ;
+	midi2:statusMask "B0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:index
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:RegisteredPerNoteController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 registered per note controller" ;
+	rdfs:comment "MIDI2 registered per note controller message." ;
+	midi2:statusMask "00"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:index
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:AssignablePerNoteController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 assignable per note controller" ;
+	rdfs:comment "MIDI2 assignable per note controller message." ;
+	midi2:statusMask "10"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:index
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:RegisterdController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 registered controller (RPN)" ;
+	rdfs:comment "MIDI2 registered controller (RPN) message." ;
+	midi2:statusMask "20"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:msb
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:lsb
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:AssignableController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 assignable controller (NRPN)" ;
+	rdfs:comment "MIDI2 assignable controller (NRPN) message." ;
+	midi2:statusMask "30"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:msb
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:lsb
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:RelativeRegisterdController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 relative registered controller (RPN)" ;
+	rdfs:comment "MIDI2 relative registered controller (RPN) message." ;
+	midi2:statusMask "40"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:msb
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:lsb
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:RelativeAssignableController
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 relative assignable controller (NRPN)" ;
+	rdfs:comment "MIDI2 relative assignable controller (NRPN) message." ;
+	midi2:statusMask "50"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:msb
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:lsb
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:ProgramChange2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 program change" ;
+	rdfs:comment "MIDI2 program change message." ;
+	midi2:statusMask "C0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:programChangeOptionFlags
+	] , [
+		midi2:byteNumber 2 ;
+		midi2:property midi2:program
+	] , [
+		midi2:byteNumber 3 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 4 ;
+		midi2:property midi2:msb
+	] , [
+		midi2:byteNumber 5 ;
+		midi2:property midi2:lsb
+	] .
+
+midi2:ChannelPressure2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 channel pressure" ;
+	rdfs:comment "MIDI2 channel pressure message." ;
+	midi2:statusMask "D0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:Pitchbend2
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 pitch bend" ;
+	rdfs:comment "MIDI2 pitch bend message." ;
+	midi2:statusMask "E0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:PerNotePitchbend
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 per-note pitch bend" ;
+	rdfs:comment "MIDI2 per-note pitch bend message." ;
+	midi2:statusMask "E0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:reserved
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:PerNoteManagement
+	a rdfs:Class ;
+	rdfs:subClassOf midi2:Midi2ChannelMessage ;
+	rdfs:label "MIDI2 per-note management" ;
+	rdfs:comment "MIDI2 per-note management message." ;
+	midi2:statusMask "F0"^^xsd:hexBinary ;
+	midi2:chunk [
+		midi2:byteNumber 0 ;
+		midi2:property midi2:noteNumber
+	] , [
+		midi2:byteNumber 1 ;
+		midi2:property midi2:perNoteManagementOptionFlags
+	] , [
+		midi2:byteNumber 2,3,4,5 ;
+		midi2:property midi2:data32
+	] .
+
+midi2:property
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "property" ;
+	rdfs:domain midi2:Chunk ;
+	rdfs:range rdf:Property ;
+	rdfs:comment "The property this chunk represents." .
+
+midi2:reserved
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "reserved" ;
+	rdfs:domain midi2:Chunk ;
+	rdfs:range xsd:unsignedByte ;
+	rdfs:comment "reserved byte." .
+
+midi2:byteNumber
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "byte number" ;
+	rdfs:domain midi2:Chunk ;
+	rdfs:range xsd:unsignedByte ;
+	rdfs:comment "The 0-based index of a byte which is part of this chunk." .
+
+midi2:index
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "index" ;
+	rdfs:domain midi2:Chunk ;
+	rdfs:range xsd:unsignedByte ;
+	rdfs:comment "The 0-based index of certain data." .
+
+midi2:chunk
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:range midi2:Chunk ;
+	rdfs:label "MIDI chunk" ;
+	rdfs:comment "A chunk of a MIDI message." .
+
+midi2:messageTypeMask
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "message type mask" ;
+	rdfs:range midi2:HexByte ;
+	rdfs:comment "The message type byte for a message." .
+
+midi2:status
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "status byte" ;
+	rdfs:range midi2:HexByte ;
+	rdfs:comment "The exact status byte for a message." .
+
+midi2:statusMask
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "status mask" ;
+	rdfs:range midi2:HexByte ;
+	rdfs:comment "The status byte for a message." .
+
+midi2:noteNumber
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "note number" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric ID of a note (0 to 127)." .
+
+midi2:msb
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "msb" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric MSB data (0 to 127)." .
+
+midi2:lsb
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "lsb" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric LSB data (0 to 127)." .
+
+midi2:velocity7
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "velocity7" ;
+	rdfs:range midi2:HexByte ;
+	rdfs:comment "A 7-bit velocity data (0 to 127)." .
+
+midi2:data8
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "single byte data" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "A numeric 8-bit data." .
+
+midi2:data16
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "two bytes data" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "A numeric 16-bit data." .
+
+midi2:data32
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "four bytes data" ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:comment "A numeric 32-bit data." .
+
+midi2:velocity16
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "velocity16" ;
+	rdfs:range xsd:unsignedShort ;
+	rdfs:comment "A 16-bit velocity data." .
+
+midi2:program
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "program number" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric ID of a program (0 to 127)." .
+
+midi2:programChangeOptionFlags
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "program change option flags" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The option flags for program change (0 or 1)." .
+
+midi2:perNoteManagementOptionFlags
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "per-note management option flags" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The option flags for per-note management (0 to 3)." .
+
+midi2:attributeType
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "attribute data" ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "An attribute type for note on or off (0 to 65535)." .
+
+midi2:attributeData
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "attribute data" ;
+	rdfs:range xsd:unsignedShort ;
+	rdfs:comment "An attribute data for note on or off (0 to 65535)." .

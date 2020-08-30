@@ -1,0 +1,38 @@
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix midi2:  <https://atsushieno.dev/ns/lv2/midi2> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://atsushieno.dev/ns/lv2/midi2>
+a  doap:Project ;
+doap:license  <http://opensource.org/licenses/mit> ;
+doap:name  "Unofficial LV2 MIDI 2.0" ;
+doap:shortdesc  "MIDI 2.0 UMP packet." ;
+doap:maintainer  <http://drobilla.net/drobilla#me> ;
+doap:created  "2020-08-29" ;
+doap:developer  <http://lv2plug.in/ns/meta#larsl> ,
+<http://drobilla.net/drobilla#me> ;
+lv2:documentation  """
+TBD
+"""^^lv2:Markdown .
+
+midi2:MidiEvent
+    lv2:documentation """
+TBD
+    """^^lv2:Markdown .
+
+midi2:messageTypeMask
+	lv2:documentation """
+
+This is a message type mask byte, to filter out lower 4 bits.
+
+"""^^lv2:Markdown .
+
+midi2:statusMask
+	lv2:documentation """
+
+This is a status code mask byte, to filter out lower 4 bits.
+
+"""^^lv2:Markdown .
