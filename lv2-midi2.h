@@ -1,8 +1,6 @@
 #ifndef LV2_MIDI2_H
 #define LV2_MIDI2_H
 
-#include "cmidi2.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
