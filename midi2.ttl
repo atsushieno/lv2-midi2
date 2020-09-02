@@ -14,6 +14,38 @@
 	rdfs:seeAlso <lv2-midi2.h> ,
 		<midi2.meta.ttl> .
 
+midi2:ump
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature flag to indicate that the plugin can receive and process UMPs (Universal MIDI Packets) in MIDI 2.0 specification.<p>
+
+<p>An LV2 Atom for <code>midi2:UMPMessage<code> represents a single UMP.</p>
+
+<p>Note that <code>midi2:ump</code> is different from <code>midi2:midi1Protocol</code> or <code>midi2:midiProtocol</code>. Either of them has to be explicitly added too.</p>
+
+<p>JR Timestamp messages are supposed to be converted to the frame time in LV2 Atom sequence. JR Timestamps can be still sent to LV2-MIDI2 plugins or hosts, but there is no guarantee that they match Atom frame time.</p>
+""" .
+
+midi2:midi1Protocol
+	a lv2:Feature ;
+	lv2:documentation """
+<p>experimental MIDI 2.0 Protocol support, beyond the basic MIDI 2.0 UMP support. It can be understood as if MIDI 1.0 Protocol could be chosen on MIDI-CI protocol negotiation.</p>
+
+<p>Note that if you don't add <code>midi2:ump</code> as the supported feature, then your (decent) hosts won't send MIDI 2.0 messages anyways.</p>
+
+<p>Since MIDI 1.0 support cannot be explicitly done, this feature is explicitly added so that it would not look odd to have implicit MIDI 1.0 support in future.
+""" .
+
+midi2:midi2Protocol
+	a lv2:Feature ;
+	lv2:documentation """
+<p>experimental MIDI 2.0 Protocol support, beyond the basic MIDI 2.0 UMP support. It can be understood as if MIDI 2.0 Protocol could be chosen on MIDI-CI protocol negotiation.</p>
+
+<p>Note that if you don't add <code>midi2:ump</code> as the supported feature, then your (decent) hosts won't send MIDI 2.0 messages anyways.</p>
+
+<p>As of this version of the feature, <code>midi2:midi2Protocol is not implicit because lots of plugins wouldn't be able to support MIDI 2.0 features in MIDI 2.0 message types. It might change in the future.</p>
+""" .
+
 midi2:HexByte
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:hexBinary ;
