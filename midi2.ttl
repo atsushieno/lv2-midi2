@@ -17,23 +17,29 @@
 midi2:ump
 	a lv2:Feature ;
 	lv2:documentation """
-<p>A feature flag to indicate that the plugin can receive and process UMPs (Universal MIDI Packets) in MIDI 2.0 specification.<p>
+<p>A feature flag to indicate that the host can receive and process UMPs (Universal MIDI Packets) in MIDI 2.0 specification.<p>
 
-<p>An LV2 Atom for <code>midi2:UMPMessage<code> represents a single UMP.</p>
+<p>An LV2 Atom for <code>midi2:UMP<code> represents a single UMP.</p>
 
 <p>Note that <code>midi2:ump</code> is different from <code>midi2:midi1Protocol</code> or <code>midi2:midiProtocol</code>. Either of them has to be explicitly added too.</p>
 
 <p>JR Timestamp messages are supposed to be converted to the frame time in LV2 Atom sequence. JR Timestamps can be still sent to LV2-MIDI2 plugins or hosts, but there is no guarantee that they match Atom frame time.</p>
+
+<p>Future versions of this extension feature may define another feature that indicates MIDI-CI support availability, as well as possibility on determining MIDI protocol by MIDI-CI between host and plugin *bypassing* LV2 API (direct MIDI interaction).</p>
+
+<p>It is recommended for MIDI 2.0 capable plugin implementors that a plugin's Atom port (either input or output) supports both <code>midi:MidiEvent</code> and <code>midi2:UMP</code> in the Atom sequence, and switch content processing based on the protocol it has chosen. See also <code>midi2:establishedProtocol</code> extension data provided by the plugin.</p>
 """ .
 
 midi2:midi1Protocol
 	a lv2:Feature ;
 	lv2:documentation """
-<p>experimental MIDI 2.0 Protocol support, beyond the basic MIDI 2.0 UMP support. It can be understood as if MIDI 1.0 Protocol could be chosen on MIDI-CI protocol negotiation.</p>
+<p>experimental MIDI 1.0 Protocol support, beyond the basic MIDI 2.0 UMP support. It can be understood as if MIDI 1.0 Protocol could be chosen on MIDI-CI protocol negotiation.</p>
 
 <p>Note that if you don't add <code>midi2:ump</code> as the supported feature, then your (decent) hosts won't send MIDI 2.0 messages anyways.</p>
 
-<p>Since MIDI 1.0 support cannot be explicitly done, this feature is explicitly added so that it would not look odd to have implicit MIDI 1.0 support in future.
+<p>Since MIDI 1.0 support cannot be explicitly done, this feature is explicitly added so that it would not look odd to have implicit MIDI 1.0 support in future.</p>
+
+<p>The plugin determines which protocol to use, based on the host features, and returns it via <code>midi2:establishedProtocol<code> extension data.</p>
 """ .
 
 midi2:midi2Protocol
@@ -44,6 +50,20 @@ midi2:midi2Protocol
 <p>Note that if you don't add <code>midi2:ump</code> as the supported feature, then your (decent) hosts won't send MIDI 2.0 messages anyways.</p>
 
 <p>As of this version of the feature, <code>midi2:midi2Protocol is not implicit because lots of plugins wouldn't be able to support MIDI 2.0 features in MIDI 2.0 message types. It might change in the future.</p>
+
+<p>The plugin determines which protocol to use, based on the host features, and returns it via <code>midi2:establishedProtocol<code> extension data.</p>
+""" .
+
+midi2:establishedProtocol
+	a lv2:ExtensionData ;
+	lv2:documentation """
+<p>An extension returned by a plugin to indicate which MIDI Protocol is being used.</p>
+
+<p>It is supposed to return the URID for the protocol, directly cast to a pointer (i.e. not an address which holds the URID). As of this version, the URID is is unmapped to either <code>midi1Protocol</code> or <code>midi2Protocol</code>.</p>.
+
+<p>Current version of this feature only mentions and does not deny any possibility on switching protocols based on MIDI-CI communications between host and plugin. This extension data works as a static starter to choose appropriate MIDI protocol to use.</p>
+
+<p>TODO: is it problematic to use feature identifiers as URI(D)s directly?</p>
 """ .
 
 midi2:HexByte
@@ -62,18 +82,18 @@ midi2:Chunk
 	rdfs:label "Chunk" ;
 	rdfs:comment "A sequence of contiguous bytes in a MIDI message." .
 
-midi2:UMPMessage
+midi2:UMP
 	a rdfs:Class ,
 		rdfs:Datatype ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
 	owl:onDatatype xsd:hexBinary ;
-	rdfs:label "MIDI 2.0 UMP Message" ;
-	rdfs:comment "A single raw MIDI message." .
+	rdfs:label "MIDI 2.0 UMP" ;
+	rdfs:comment "A single raw UMP (Universal MIDI packet)." .
 
 midi2:SystemMessage
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "System Message" ;
 	rdfs:comment "system message." ;
 	midi2:messageTypeMask "10"^^xsd:hexBinary .
@@ -92,35 +112,35 @@ midi2:SystemRealtime
 
 midi2:Midi1ChannelMessage
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "MIDI1 Channel Voice Message" ;
 	rdfs:comment "MIDI 1.0 channel voice message." ;
 	midi2:messageTypeMask "20"^^xsd:hexBinary .
 
 midi2:Sysex7Message
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "System Exclusive 7bits" ;
 	rdfs:comment "system exclusive message in 7 bits." ;
 	midi2:messageTypeMask "30"^^xsd:hexBinary .
 
 midi2:Midi2ChannelMessage
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "MIDI2 Channel Voice Message" ;
 	rdfs:comment "MIDI 2.0 channel voice message." ;
 	midi2:messageTypeMask "40"^^xsd:hexBinary .
 
 midi2:Sysex8Message
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "System Exclusive 8bits" ;
 	rdfs:comment "system exclusive message in 8 bits." ;
 	midi2:messageTypeMask "50"^^xsd:hexBinary .
 
 midi2:MixedDataSet
 	a rdfs:Class ;
-	rdfs:subClassOf midi2:UMPMessage ;
+	rdfs:subClassOf midi2:UMP ;
 	rdfs:label "System Exclusive 8bits" ;
 	rdfs:comment "system exclusive message in 8 bits." ;
 	midi2:messageTypeMask "50"^^xsd:hexBinary .

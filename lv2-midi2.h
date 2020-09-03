@@ -8,6 +8,13 @@ extern "C" {
 #define LV2_MIDI2_URI    "http://atsushieno.dev/ns/lv2/midi2"
 #define LV2_MIDI2_PREFIX LV2_MIDI2_URI "#"
 
+/* URIs for features and extension data */
+#define LV2_MIDI2__ump             LV2_MIDI2_PREFIX "ump"
+#define LV2_MIDI2__midi1Protocol   LV2_MIDI2_PREFIX "midi1Protocol"
+#define LV2_MIDI2__midi2Protocol   LV2_MIDI2_PREFIX "midi2Protocol"
+#define LV2_MIDI2__establishedProtocol   LV2_MIDI2_PREFIX "establishedProtocol"
+
+/* Atom types */
 #define LV2_MIDI2__UMP             LV2_MIDI2_PREFIX "UMP"
 #define LV2_MIDI2__SystemMessage   LV2_MIDI2_PREFIX "SystemMessage"
 #define LV2_MIDI2__Midi1ChannelMessage   LV2_MIDI2_PREFIX "Midi1ChannelMessage"
@@ -51,6 +58,8 @@ extern "C" {
 #define LV2_MIDI2__Pitchbend2   LV2_MIDI2_PREFIX "Pitchbend2"
 #define LV2_MIDI2__PerNotePitchbend   LV2_MIDI2_PREFIX "PerNotePitchbend"
 #define LV2_MIDI2__PerNoteManagement   LV2_MIDI2_PREFIX "PerNoteManagement"
+
+/* data members */
 #define LV2_MIDI2__status   LV2_MIDI2_PREFIX "status"
 #define LV2_MIDI2__statusMask   LV2_MIDI2_PREFIX "statusMask"
 #define LV2_MIDI2__messageTypeMask   LV2_MIDI2_PREFIX "messageTypeMask"
